@@ -5,6 +5,7 @@ var answerButton1 = document.getElementById("answer-1");
 var answerButton2 = document.getElementById("answer-2");
 var answerButton3 = document.getElementById("answer-3");
 var answerButton4 = document.getElementById("answer-4");
+var answerButtons = document.getElementById("answers");
 
 // declare variables referencing other elements
 var timer = document.getElementById("timer");
@@ -123,7 +124,7 @@ function runQuiz() {
     // start timer for quiz
     var timeLeft = 90;
     timer.innerHTML = "Timer: " + timeLeft + "s";
-    var hasUserAnswered = false;
+    var index = 0;
 
     // 1s clock function
     var timeInterval = setInterval(function () {
@@ -137,19 +138,48 @@ function runQuiz() {
         }
     }, 1000);
 
-    // TODO display question 1
+    // Initial display of question 1
     question.innerHTML = quiz[0].question;
     answerButton1.textContent = quiz[0].answer1;
     answerButton2.textContent = quiz[0].answer2;
     answerButton3.textContent = quiz[0].answer3;
     answerButton4.textContent = quiz[0].answer4;
     
-    
+    function cycleQuestion() {
+        index++;
+        if (index === quiz.length) {
+            // final question has been answered, exit quiz and go to score page
+            showScoresPage();
+            clearInterval(timeInterval); // Breaks the countdown loop
+            return;
+        }
+        question.innerHTML = quiz[index].question;
+        answerButton1.textContent = quiz[index].answer1;
+        answerButton2.textContent = quiz[index].answer2;
+        answerButton3.textContent = quiz[index].answer3;
+        answerButton4.textContent = quiz[index].answer4;
+    }
 
     // TODO after question is answered move to next question
 
-
+    answerButtons.addEventListener('click', function(event) {
+        var element = event.target;
+        // check if selected element is an answer button
+        if (element.matches(".answer-button")) {
+            if (element.innerHTML === quiz[index].correctAnswer) {
+                // correct answer, display a 'correct' message
+                console.log("Correct");
+            } else {
+                // incorrect answer, display an 'incorrect' message and deduct time from countdown
+                timeLeft = timeLeft - 10;
+                timer.innerHTML = "Timer: " + timeLeft + "s";
+                console.log("Incorrect");
+            }
+            cycleQuestion();
+        }
+    })
 
     // TODO after last question is answered or timer reaches 0 end quiz and show score page
     
 }
+
