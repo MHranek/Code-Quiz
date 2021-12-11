@@ -68,6 +68,7 @@ var score;
 
 // hide quiz and high scores on startup
 showMainPage();
+parseLocalData()
 displayHighScores()
 
 // change which section is being shown depending on which button is pressed
@@ -100,6 +101,7 @@ function showScoresPage() {
     // change content of high scores button to show user they can go back to the main page
     highScoresButton.innerHTML = "Main Page";
     highScoresButton.setAttribute("style", "display:inline");
+    parseLocalData()
     displayHighScores();
 }
 function showInputScoresPage() {
@@ -112,27 +114,30 @@ function showInputScoresPage() {
     timer.setAttribute("style", "display:none");
 }
 function displayHighScores() {
-    // Parse localstorage data whenever on the highscores page
-    var showScores = JSON.parse(localStorage.getItem("highScores")); // this is the array
     // for each index in the array (each object) parse it and put it back into the array
     highScoresList.innerHTML = "";
-    if (showScores != null) {
-        highScores = showScores;
-        for (var i = 0; i < showScores.length; i++) {
+    if (highScores != null) {
+        for (var i = 0; i < highScores.length; i++) {
             // parse object
-            var parsedObject = JSON.parse(showScores[i]);
+            var parsedObject = JSON.parse(highScores[i]);
             // push parsed object onto array
-            showScores[i] = parsedObject;
+            highScores[i] = parsedObject;
             // createListItem(parsedObject, i);
         }
         // sort high scores by score
         // sort compares score value of each object, if the difference between b and a is <= -1 then a comes before b, and if the difference is >= 1 then b comes before a
-        showScores.sort((a, b) => b.score-a.score);
-        console.log(showScores);
-        for (var i = 0; i <showScores.length; i++) {
-            createListItem(showScores[i], i);
+        highScores.sort((a, b) => b.score-a.score);
+        for (var i = 0; i <highScores.length; i++) {
+            createListItem(highScores[i], i);
         }
+    } else {
+        highScores = [];
     }
+}
+
+function parseLocalData() {
+    // Parse localstorage data whenever on the highscores page
+    highScores = JSON.parse(localStorage.getItem("highScores"));
 }
 
 function createListItem(object, index) {
@@ -151,6 +156,19 @@ function createListItem(object, index) {
 }
 
 // TODO when remove button is clicked, remove that score from the list
+highScoresList.addEventListener("click", function(event) {
+    var element = event.target;
+    if (element.matches("button") === true) {
+        var index = element.parentElement.getAttribute("data-index");
+        highScores.splice(index, 1);
+        console.log(highScores);
+        for (var i = 0; i < highScores.length; i++) {
+            highScores[i] = JSON.stringify(highScores[i]);
+        }
+        localStorage.setItem("highScores", JSON.stringify(highScores));
+        displayHighScores();
+    }
+})
 
 // when corresponding button is clicked change which section is visible
 // make high scores visible
