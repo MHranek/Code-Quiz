@@ -22,44 +22,44 @@ var highScoresList = document.getElementById("high-scores-list");
 // Populate quiz array with question objects
 var quiz = [
     {
-        question: "Question 1",
-        answer1: "Answer 1.1",
-        answer2: "Answer 1.2",
-        answer3: "Answer 1.3",
-        answer4: "Answer 1.4",
-        correctAnswer: "Correct Answer",
+        question: "Commonly used data types DO NOT include:",
+        answer1: "strings",
+        answer2: "booleans",
+        answer3: "alerts",
+        answer4: "numbers",
+        correctAnswer: "alerts",
     },
     {
-        question: "Question 2",
-        answer1: "Answer 2.1",
-        answer2: "Answer 2.2",
-        answer3: "Answer 2.3",
-        answer4: "Answer 2.4",
-        correctAnswer: "Correct Answer",
+        question: "The condition in an if / else statement is enclosed within ___.",
+        answer1: "quotes",
+        answer2: "curly brackets",
+        answer3: "parentheses",
+        answer4: "square brackets",
+        correctAnswer: "parentheses",
     },
     {
-        question: "Question 3",
-        answer1: "Answer 3.1",
-        answer2: "Answer 3.2",
-        answer3: "Answer 3.3",
-        answer4: "Answer 3.4",
-        correctAnswer: "Correct Answer",
+        question: "Arrays in JavaScript can be used to store ___.",
+        answer1: "numbers and strings",
+        answer2: "other arrays",
+        answer3: "booleans",
+        answer4: "all of the above",
+        correctAnswer: "all of the above",
     },
     {
-        question: "Question 4",
-        answer1: "Answer 4.1",
-        answer2: "Answer 4.2",
-        answer3: "Answer 4.3",
-        answer4: "Answer 4.4",
-        correctAnswer: "Correct Answer",
+        question: "String values must be enclosed within ___ when being assigned to variables.",
+        answer1: "commas",
+        answer2: "curly brackets",
+        answer3: "quotes",
+        answer4: "parentheses",
+        correctAnswer: "quotes",
     },
     {
-        question: "Question 5",
-        answer1: "Answer 5.1",
-        answer2: "Answer 5.2",
-        answer3: "Answer 5.3",
-        answer4: "Answer 5.4",
-        correctAnswer: "Correct Answer",
+        question: "A very useful tool used during development and debugging for printing content to the debugger is:",
+        answer1: "JavaScript",
+        answer2: "terminal/bash",
+        answer3: "for loops",
+        answer4: "console.log",
+        correctAnswer: "console.log",
     },
 ]
 
@@ -144,7 +144,7 @@ function parseLocalData() {
 function createListItem(object, index) {
     // add li for the object in "high-scores-list"
     var li = document.createElement("li");
-    li.innerHTML = object.name + ": " + object.score;
+    li.innerHTML = object.name + " - " + object.score;
     li.setAttribute("data-index", index);
     // append li to high-scores-list
     highScoresList.appendChild(li);
