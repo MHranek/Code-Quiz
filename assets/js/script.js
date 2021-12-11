@@ -1,16 +1,17 @@
 // declare variables referencing buttons
 var highScoresButton = document.getElementById("high-scores-button");
 var beginQuizButton = document.getElementById("start-button");
-var answerButton1 = document.getElementById("answer1");
-var answerButton2 = document.getElementById("answer2");
-var answerButton3 = document.getElementById("answer3");
-var answerButton4 = document.getElementById("answer4");
+var answerButton1 = document.getElementById("answer-1");
+var answerButton2 = document.getElementById("answer-2");
+var answerButton3 = document.getElementById("answer-3");
+var answerButton4 = document.getElementById("answer-4");
 
 // declare variables referencing other elements
 var timer = document.getElementById("timer");
 var mainPage = document.getElementById("main-page");
 var quizPage = document.getElementById("quiz");
 var scoresPage = document.getElementById("high-scores");
+var question = document.getElementById("question");
 
 // Populate quiz array with question objects
 var quiz = [
@@ -109,7 +110,6 @@ highScoresButton.addEventListener("click", function() {
     } else {
         showScoresPage();
     }
-    
 })
 
 // make quiz visible
@@ -120,26 +120,35 @@ beginQuizButton.addEventListener('click', function() {
 
 // Run quiz
 function runQuiz() {
-    // TODO start timer for quiz
-    var timeLeft = 10;
+    // start timer for quiz
+    var timeLeft = 90;
     timer.innerHTML = "Timer: " + timeLeft + "s";
+    var hasUserAnswered = false;
 
     // 1s clock function
     var timeInterval = setInterval(function () {
         timeLeft--;
         timer.innerHTML = "Timer: " + timeLeft + "s";
-        console.log(timeLeft);
+        // console.log(timeLeft);
         if (timeLeft < 0) {
             // when timer hits 0 end quiz and go to score input screen
             showScoresPage();
             clearInterval(timeInterval);
         }
-        
     }, 1000);
 
     // TODO display question 1
+    question.innerHTML = quiz[0].question;
+    answerButton1.textContent = quiz[0].answer1;
+    answerButton2.textContent = quiz[0].answer2;
+    answerButton3.textContent = quiz[0].answer3;
+    answerButton4.textContent = quiz[0].answer4;
+    
+    
 
     // TODO after question is answered move to next question
+
+
 
     // TODO after last question is answered or timer reaches 0 end quiz and show score page
     
