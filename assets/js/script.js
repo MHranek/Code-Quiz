@@ -155,13 +155,12 @@ function createListItem(object, index) {
     highScoresList.appendChild(li);
 }
 
-// TODO when remove button is clicked, remove that score from the list
+// when remove button is clicked, remove that score from the list
 highScoresList.addEventListener("click", function(event) {
     var element = event.target;
     if (element.matches("button") === true) {
         var index = element.parentElement.getAttribute("data-index");
         highScores.splice(index, 1);
-        console.log(highScores);
         for (var i = 0; i < highScores.length; i++) {
             highScores[i] = JSON.stringify(highScores[i]);
         }
@@ -267,6 +266,7 @@ submitButton.addEventListener("click", function (event) {
     // add initials with score to array of objects on local storage
     if (initials.value != "") {
         var userInitials = initials.value.trim();
+        userInitials = userInitials.toUpperCase();
         var userData = {
             name: userInitials,
             score: score,
