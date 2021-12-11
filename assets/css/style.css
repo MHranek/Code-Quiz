@@ -89,3 +89,11 @@ main {
     transition: all 1s ease-in-out;
     margin-left: 15px;
 }
+
+#high-scores-list li {
+    margin: 5px 0;  
+}
+
+#high-scores-list li button {
+    margin-left: 100px;
+}

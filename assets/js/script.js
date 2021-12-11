@@ -67,6 +67,7 @@ var score;
 
 // hide quiz and high scores on startup
 showMainPage();
+displayHighScores()
 
 // change which section is being shown depending on which button is pressed
 function showMainPage() {
@@ -115,27 +116,33 @@ function displayHighScores() {
     // for each index in the array (each object) parse it and put it back into the array
     var highScoresList = document.getElementById("high-scores-list");
     highScoresList.innerHTML = "";
-    for (var i = 0; i < showScores.length; i++) {
-        // parse object
-        var parsedObject = JSON.parse(showScores[i]);
-        // push parsed object onto array
-        showScores[i] = parsedObject;
-        // add li for the object in "high-scores-list"
-        var li = document.createElement("li");
-        li.innerHTML = parsedObject.name + ": " + parsedObject.score;
-        li.setAttribute("data-index", i);
-
-        // create button to remove highscore from list
-        var listButton = document.createElement("button");
-        listButton.innerHTML = "Remove";
-
-        // append button to li and li to high-scores-list
-        li.appendChild(listButton);
-        highScoresList.appendChild(li);
+    if (showScores != null) {
+        highScores = showScores;
+        for (var i = 0; i < showScores.length; i++) {
+            // parse object
+            var parsedObject = JSON.parse(showScores[i]);
+            // push parsed object onto array
+            showScores[i] = parsedObject;
+            // add li for the object in "high-scores-list"
+            var li = document.createElement("li");
+            li.innerHTML = parsedObject.name + ": " + parsedObject.score;
+            li.setAttribute("data-index", i);
+    
+            // create button to remove highscore from list
+            var listButton = document.createElement("button");
+            listButton.innerHTML = "Remove";
+    
+            // append button to li and li to high-scores-list
+            li.appendChild(listButton);
+            highScoresList.appendChild(li);
+        }
+        // TODO sort high scores by score
     }
-
-    // TODO sort high scores by score
+    console.log(showScores);
+    console.log(highScores);
 }
+
+// TODO when remove button is clicked, remove that score from the list
 
 // when corresponding button is clicked change which section is visible
 // make high scores visible
@@ -239,6 +246,9 @@ submitButton.addEventListener("click", function (event) {
             score: score,
         }
         // push userData onto the end of localstorage array
+        for (var i = 0; i < highScores.length; i++) {
+            highScores[i] = JSON.stringify(highScores[i]);
+        }
         highScores.push(JSON.stringify(userData));
         localStorage.setItem("highScores", JSON.stringify(highScores));
         showScoresPage();
