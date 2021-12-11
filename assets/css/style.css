@@ -89,15 +89,25 @@ main {
 #high-scores-list {
     display:flex;
     flex-direction: column;
-    align-content: space-between;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: solid 3px var(--grey-background);
+    border-radius: 10px;
+    padding-left: 30px;
+    background-color: var(--blue);
 }
 
 #high-scores-list li {
     margin: 5px 0;  
 }
 
-#high-scores-list li button {
+#high-scores button {
     background-color: rgb(163, 0, 0);
     color: black;
-    font-size: 16px;
+    font-size: 20px;
+    margin:5px;
+}
+
+#high-scores button:hover {
+    box-shadow:0 0 10px rgb(255, 0, 0);
 }

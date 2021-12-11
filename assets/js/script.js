@@ -7,6 +7,7 @@ var answerButton3 = document.getElementById("answer-3");
 var answerButton4 = document.getElementById("answer-4");
 var answerButtons = document.getElementById("answers");
 var submitButton = document.getElementById("submit");
+var clearButton = document.getElementById("clear");
 
 // declare variables referencing other elements
 var timer = document.getElementById("timer");
@@ -145,28 +146,16 @@ function createListItem(object, index) {
     var li = document.createElement("li");
     li.innerHTML = object.name + ": " + object.score;
     li.setAttribute("data-index", index);
-
-    // create button to remove highscore from list
-    var listButton = document.createElement("button");
-    listButton.innerHTML = "Remove";
-
-    // append button to li and li to high-scores-list
-    li.appendChild(listButton);
+    // append li to high-scores-list
     highScoresList.appendChild(li);
 }
 
-// when remove button is clicked, remove that score from the list
-highScoresList.addEventListener("click", function(event) {
-    var element = event.target;
-    if (element.matches("button") === true) {
-        var index = element.parentElement.getAttribute("data-index");
-        highScores.splice(index, 1);
-        for (var i = 0; i < highScores.length; i++) {
-            highScores[i] = JSON.stringify(highScores[i]);
-        }
-        localStorage.setItem("highScores", JSON.stringify(highScores));
-        displayHighScores();
-    }
+// when clear button is clicked, clear high score data
+clearButton.addEventListener("click", function(event) {
+    event.preventDefault();
+    highScores = [];
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+    displayHighScores();
 })
 
 // when corresponding button is clicked change which section is visible
