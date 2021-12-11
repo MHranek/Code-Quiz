@@ -21,8 +21,6 @@ body {
 nav {
     text-align: left;
     padding: 10px;
-    display: flex;
-    justify-content: space-between;
 }
 
 button {
