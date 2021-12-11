@@ -10,15 +10,16 @@
 <body>
     <header>
         <nav>
-            <button id="high-scores">High Scores</button>
+            <button id="high-scores-button">High Scores</button>
             <h3 id="timer">Timer:</h3>
         </nav>
     </header>
     <main>
-        <section data-state="visible" id="main-page">
+        <section id="main-page">
             <h1>Welcome to the code quiz</h1>
+            <button id="start-button">Begin Quiz</button>
         </section>
-        <section data-state="hidden" id="quiz">
+        <section id="quiz">
             <h2>Question</h2>
             <ol id="answers">
                 <button id="answer-1">Answer 1</button>
@@ -27,6 +28,10 @@
                 <button id="answer-4">Answer 4</button>
             </ol>
         </section>
+        <section id="high-scores">
+            <h1>High Scores</h1>
+        </section>
     </main>
+    <script src="./assets/js/script.js"></script>
 </body>
 </html>
