@@ -101,7 +101,7 @@ function showScoresPage() {
     timer.setAttribute("style", "display:none");
 }
 
-// TODO when corresponding button is clicked change which section is visible
+// when corresponding button is clicked change which section is visible
 // make high scores visible
 highScoresButton.addEventListener("click", function() {
     if (scoresPage.dataset.status === "visible"){
@@ -115,6 +115,32 @@ highScoresButton.addEventListener("click", function() {
 // make quiz visible
 beginQuizButton.addEventListener('click', function() {
     showQuizPage();
-    // TODO start timer for quiz
-
+    runQuiz();
 })
+
+// Run quiz
+function runQuiz() {
+    // TODO start timer for quiz
+    var timeLeft = 10;
+    timer.innerHTML = "Timer: " + timeLeft + "s";
+
+    // 1s clock function
+    var timeInterval = setInterval(function () {
+        timeLeft--;
+        timer.innerHTML = "Timer: " + timeLeft + "s";
+        console.log(timeLeft);
+        if (timeLeft < 0) {
+            // when timer hits 0 end quiz and go to score input screen
+            showScoresPage();
+            clearInterval(timeInterval);
+        }
+        
+    }, 1000);
+
+    // TODO display question 1
+
+    // TODO after question is answered move to next question
+
+    // TODO after last question is answered or timer reaches 0 end quiz and show score page
+    
+}
