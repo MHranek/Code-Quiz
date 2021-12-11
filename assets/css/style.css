@@ -64,6 +64,7 @@ main {
     margin: 15px;
 }
 
+/* recheck if flex is needed here and elsewhere */
 #quiz {
     display: flex;
     flex-direction: column;

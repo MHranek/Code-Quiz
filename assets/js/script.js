@@ -15,6 +15,7 @@ var quizPage = document.getElementById("quiz");
 var scoresPage = document.getElementById("high-scores");
 var question = document.getElementById("question");
 var inputScores = document.getElementById("input-score");
+var initials = document.getElementById("initials");
 
 // Populate quiz array with question objects
 var quiz = [
@@ -60,6 +61,10 @@ var quiz = [
     },
 ]
 
+// Populate high scores from localstorage
+var highScores = [];
+var score;
+
 // hide quiz and high scores on startup
 showMainPage();
 
@@ -93,6 +98,14 @@ function showScoresPage() {
     // change content of high scores button to show user they can go back to the main page
     highScoresButton.innerHTML = "Main Page";
     highScoresButton.setAttribute("style", "display:inline");
+
+    // Parse localstorage data whenever on the highscores page
+    var showScores = localStorage.getItem("highScores"); // this is the array of stringified objects from localstorage
+
+    // TODO for each index in the array (each object) parse it and put it back into the array
+    
+    console.log(showScores);
+    
 }
 function showInputScoresPage() {
     mainPage.setAttribute("style", "display:none");
@@ -127,7 +140,7 @@ function runQuiz() {
     timer.innerHTML = "Timer: " + timeLeft + "s";
     var index = 0;
     var message = document.getElementById("message");
-    var messageTime = 2;
+    var messageTime = 1;
 
     // 1s clock function
     var timeInterval = setInterval(function () {
@@ -136,6 +149,7 @@ function runQuiz() {
         // console.log(timeLeft);
         if (timeLeft < 0) {
             // when timer hits 0 end quiz and go to score input screen
+            score = timeLeft;
             showInputScoresPage();
             clearInterval(timeInterval);
         }
@@ -152,6 +166,7 @@ function runQuiz() {
         index++;
         if (index === quiz.length) {
             // final question has been answered, exit quiz and go to score page
+            score = timeLeft;
             showInputScoresPage();
             inputScores.children[0].innerHTML = "Your score is " + timeLeft;
             clearInterval(timeInterval); // Breaks the countdown loop
@@ -173,39 +188,42 @@ function runQuiz() {
             if (element.innerHTML === quiz[index].correctAnswer) {
                 // correct answer, display a 'correct' message
                 message.innerHTML = "Correct!";
-                // display message for 1s
-                var timeInterval2 = setInterval(function () {
-                    messageTime--;
-                    if (messageTime === 0) {
-                        message.innerHTML = "";
-                        clearInterval(timeInterval2);
-                        messageTime = 2;
-                    }
-                }, 1000);
             } else {
                 // incorrect answer, display an 'incorrect' message and deduct time from countdown
-                timeLeft = timeLeft - 10;
+                timeLeft = timeLeft - 17;
                 timer.innerHTML = "Timer: " + timeLeft + "s";
                 message.innerHTML = "Incorrect";
-                // display message for 1s
-                var timeInterval3 = setInterval(function () {
-                    messageTime--;
-                    if (messageTime === 0) {
-                        message.innerHTML = "";
-                        clearInterval(timeInterval3);
-                        messageTime = 2;
-                    }
-                }, 1000);
             }
+            // display message for 1s
+            var timeInterval2 = setInterval(function () {
+                messageTime--;
+                if (messageTime === 0) {
+                    message.innerHTML = "";
+                    clearInterval(timeInterval2);
+                    messageTime = 1;
+                }
+            }, 1000);
             cycleQuestion();
         }
     })
 }
 
-// TODO Input Scores and goto high scores page
+// Input Scores and goto high scores page
 submitButton.addEventListener("click", function (event) {
     event.preventDefault();
-    // TODO add initials with score to array of objects on local storage
-
-    showScoresPage();
+    // add initials with score to array of objects on local storage
+    if (initials.value != "") {
+        var userInitials = initials.value;
+        var userData = {
+            name: userInitials,
+            score: score,
+        }
+        // push userData onto the end of localstorage array
+        highScores.push(JSON.stringify(userData));
+        localStorage.setItem("highScores", highScores);
+        showScoresPage();
+        initials.value = '';
+    } else {
+        initials.setAttribute("style", "border-style:dashed; border-color:red");
+    }  
 })
