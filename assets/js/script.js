@@ -98,14 +98,7 @@ function showScoresPage() {
     // change content of high scores button to show user they can go back to the main page
     highScoresButton.innerHTML = "Main Page";
     highScoresButton.setAttribute("style", "display:inline");
-
-    // Parse localstorage data whenever on the highscores page
-    var showScores = localStorage.getItem("highScores"); // this is the array of stringified objects from localstorage
-
-    // TODO for each index in the array (each object) parse it and put it back into the array
-    
-    console.log(showScores);
-    
+    displayHighScores();
 }
 function showInputScoresPage() {
     mainPage.setAttribute("style", "display:none");
@@ -115,6 +108,33 @@ function showInputScoresPage() {
     scoresPage.dataset.status = "hidden";
     // change content of high scores button to show user they can go back to the main page
     timer.setAttribute("style", "display:none");
+}
+function displayHighScores() {
+    // Parse localstorage data whenever on the highscores page
+    var showScores = JSON.parse(localStorage.getItem("highScores")); // this is the array
+    // for each index in the array (each object) parse it and put it back into the array
+    var highScoresList = document.getElementById("high-scores-list");
+    highScoresList.innerHTML = "";
+    for (var i = 0; i < showScores.length; i++) {
+        // parse object
+        var parsedObject = JSON.parse(showScores[i]);
+        // push parsed object onto array
+        showScores[i] = parsedObject;
+        // add li for the object in "high-scores-list"
+        var li = document.createElement("li");
+        li.innerHTML = parsedObject.name + ": " + parsedObject.score;
+        li.setAttribute("data-index", i);
+
+        // create button to remove highscore from list
+        var listButton = document.createElement("button");
+        listButton.innerHTML = "Remove";
+
+        // append button to li and li to high-scores-list
+        li.appendChild(listButton);
+        highScoresList.appendChild(li);
+    }
+
+    // TODO sort high scores by score
 }
 
 // when corresponding button is clicked change which section is visible
@@ -213,14 +233,14 @@ submitButton.addEventListener("click", function (event) {
     event.preventDefault();
     // add initials with score to array of objects on local storage
     if (initials.value != "") {
-        var userInitials = initials.value;
+        var userInitials = initials.value.trim();
         var userData = {
             name: userInitials,
             score: score,
         }
         // push userData onto the end of localstorage array
         highScores.push(JSON.stringify(userData));
-        localStorage.setItem("highScores", highScores);
+        localStorage.setItem("highScores", JSON.stringify(highScores));
         showScoresPage();
         initials.value = '';
     } else {
