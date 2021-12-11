@@ -16,6 +16,7 @@ var scoresPage = document.getElementById("high-scores");
 var question = document.getElementById("question");
 var inputScores = document.getElementById("input-score");
 var initials = document.getElementById("initials");
+var highScoresList = document.getElementById("high-scores-list");
 
 // Populate quiz array with question objects
 var quiz = [
@@ -114,7 +115,6 @@ function displayHighScores() {
     // Parse localstorage data whenever on the highscores page
     var showScores = JSON.parse(localStorage.getItem("highScores")); // this is the array
     // for each index in the array (each object) parse it and put it back into the array
-    var highScoresList = document.getElementById("high-scores-list");
     highScoresList.innerHTML = "";
     if (showScores != null) {
         highScores = showScores;
@@ -123,23 +123,31 @@ function displayHighScores() {
             var parsedObject = JSON.parse(showScores[i]);
             // push parsed object onto array
             showScores[i] = parsedObject;
-            // add li for the object in "high-scores-list"
-            var li = document.createElement("li");
-            li.innerHTML = parsedObject.name + ": " + parsedObject.score;
-            li.setAttribute("data-index", i);
-    
-            // create button to remove highscore from list
-            var listButton = document.createElement("button");
-            listButton.innerHTML = "Remove";
-    
-            // append button to li and li to high-scores-list
-            li.appendChild(listButton);
-            highScoresList.appendChild(li);
+            // createListItem(parsedObject, i);
         }
-        // TODO sort high scores by score
+        // sort high scores by score
+        // sort compares score value of each object, if the difference between b and a is <= -1 then a comes before b, and if the difference is >= 1 then b comes before a
+        showScores.sort((a, b) => b.score-a.score);
+        console.log(showScores);
+        for (var i = 0; i <showScores.length; i++) {
+            createListItem(showScores[i], i);
+        }
     }
-    console.log(showScores);
-    console.log(highScores);
+}
+
+function createListItem(object, index) {
+    // add li for the object in "high-scores-list"
+    var li = document.createElement("li");
+    li.innerHTML = object.name + ": " + object.score;
+    li.setAttribute("data-index", index);
+
+    // create button to remove highscore from list
+    var listButton = document.createElement("button");
+    listButton.innerHTML = "Remove";
+
+    // append button to li and li to high-scores-list
+    li.appendChild(listButton);
+    highScoresList.appendChild(li);
 }
 
 // TODO when remove button is clicked, remove that score from the list
