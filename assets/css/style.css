@@ -93,7 +93,7 @@ main {
     align-items: flex-start;
     border: solid 3px var(--grey-background);
     border-radius: 10px;
-    padding: 0 5px 0 30px;
+    padding: 0 5px 0 40px;
     background-color: var(--blue);
 }
 

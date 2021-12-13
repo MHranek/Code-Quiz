@@ -10,7 +10,7 @@ var submitButton = document.getElementById("submit");
 var clearButton = document.getElementById("clear");
 
 // declare variables referencing other elements
-var timer = document.getElementById("timer");
+var timerEl = document.getElementById("timer");
 var mainPage = document.getElementById("main-page");
 var quizPage = document.getElementById("quiz");
 var scoresPage = document.getElementById("high-scores");
@@ -66,6 +66,10 @@ var quiz = [
 // Populate high scores from localstorage
 var highScores = [];
 var score;
+var index = 0;
+var firstClick = false;
+var timer = 90;
+var quizRunning;
 
 // hide quiz and high scores on startup
 showMainPage();
@@ -81,7 +85,7 @@ function showMainPage() {
     scoresPage.dataset.status = "hidden";
     // change the content of the high scores button after showing the main page to display high scores
     highScoresButton.innerHTML = "High Scores";
-    timer.setAttribute("style", "display:none");
+    timerEl.setAttribute("style", "display:none");
 }
 function showQuizPage() {
     mainPage.setAttribute("style", "display:none");
@@ -91,7 +95,7 @@ function showQuizPage() {
     scoresPage.dataset.status = "hidden";
     // hides high scores button and shows timer in its place
     highScoresButton.setAttribute("style", "display:none");
-    timer.setAttribute("style", "display:inline");
+    timerEl.setAttribute("style", "display:inline");
 }
 function showScoresPage() {
     mainPage.setAttribute("style", "display:none");
@@ -112,7 +116,7 @@ function showInputScoresPage() {
     inputScores.setAttribute("style", "display:inline");
     scoresPage.dataset.status = "hidden";
     // change content of high scores button to show user they can go back to the main page
-    timer.setAttribute("style", "display:none");
+    timerEl.setAttribute("style", "display:none");
 }
 function displayHighScores() {
     // for each index in the array (each object) parse it and put it back into the array
@@ -144,7 +148,7 @@ function parseLocalData() {
 function createListItem(object, index) {
     // add li for the object in "high-scores-list"
     var li = document.createElement("li");
-    li.innerHTML = object.name + " - " + object.score;
+    li.innerHTML = object.name + ": " + object.score;
     li.setAttribute("data-index", index);
     // append li to high-scores-list
     highScoresList.appendChild(li);
@@ -177,41 +181,41 @@ beginQuizButton.addEventListener('click', function () {
 // Run quiz
 function runQuiz() {
     // start timer for quiz
-    var timeLeft = 90;
-    timer.innerHTML = "Timer: " + timeLeft + "s";
-    var index = 0;
+    quizRunning = true;
+    timeLeft = 90;
+    timerEl.innerHTML = "Timer: " + timeLeft + "s";
     var message = document.getElementById("message");
     var messageTime = 1;
 
-    // 1s clock function
+    // 1s clock function for timer
     var timeInterval = setInterval(function () {
         timeLeft--;
-        timer.innerHTML = "Timer: " + timeLeft + "s";
+        timerEl.innerHTML = "Timer: " + timeLeft + "s";
         // console.log(timeLeft);
-        if (timeLeft < 0) {
+        if (timeLeft <= 0 || !quizRunning) {
             // when timer hits 0 end quiz and go to score input screen
             score = timeLeft;
             showInputScoresPage();
+            inputScores.children[0].innerHTML = "Your score is " + score;
             clearInterval(timeInterval);
         }
     }, 1000);
 
     // Initial display of question 1
-    question.innerHTML = quiz[0].question;
-    answerButton1.textContent = quiz[0].answer1;
-    answerButton2.textContent = quiz[0].answer2;
-    answerButton3.textContent = quiz[0].answer3;
-    answerButton4.textContent = quiz[0].answer4;
+    // cycleQuestion();
+    question.innerHTML = quiz[index].question;
+    answerButton1.textContent = quiz[index].answer1;
+    answerButton2.textContent = quiz[index].answer2;
+    answerButton3.textContent = quiz[index].answer3;
+    answerButton4.textContent = quiz[index].answer4;
 
     function cycleQuestion() {
         index++;
         if (index === quiz.length) {
             // final question has been answered, exit quiz and go to score page
             score = timeLeft;
-            showInputScoresPage();
-            inputScores.children[0].innerHTML = "Your score is " + timeLeft;
-            clearInterval(timeInterval); // Breaks the countdown loop
             index = 0;
+            quizRunning = false; // Breaks the countdown loop
             return;
         }
         question.innerHTML = quiz[index].question;
@@ -221,32 +225,41 @@ function runQuiz() {
         answerButton4.textContent = quiz[index].answer4;
     }
 
-    // after question is answered move to next question
-    answerButtons.addEventListener('click', function (event) {
-        var element = event.target;
-        // check if selected element is an answer button
-        if (element.matches(".answer-button")) {
-            if (element.innerHTML === quiz[index].correctAnswer) {
-                // correct answer, display a 'correct' message
-                message.innerHTML = "Correct!";
-            } else {
-                // incorrect answer, display an 'incorrect' message and deduct time from countdown
-                timeLeft = timeLeft - 17;
-                timer.innerHTML = "Timer: " + timeLeft + "s";
-                message.innerHTML = "Incorrect";
-            }
-            // display message for 1s
-            var timeInterval2 = setInterval(function () {
-                messageTime--;
-                if (messageTime === 0) {
-                    message.innerHTML = "";
-                    clearInterval(timeInterval2);
-                    messageTime = 1;
+    if (firstClick === false) {
+        // after question is answered move to next question
+        answerButtons.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var element = event.target;
+            // check if selected element is an answer button
+            if (element.matches(".answer-button")) {
+                var correctAnswer = quiz[index].correctAnswer;
+                console.log(index);
+                console.log(element.innerHTML);
+                console.log(correctAnswer);
+                if (element.innerHTML === quiz[index].correctAnswer) {
+                    // correct answer, display a 'correct' message
+                    message.innerHTML = "Correct!";
+                } else {
+                    // incorrect answer, display an 'incorrect' message and deduct time from countdown
+                    timeLeft = timeLeft - 17;
+                    timerEl.innerHTML = "Timer: " + timeLeft + "s";
+                    message.innerHTML = "Incorrect";
                 }
-            }, 1000);
-            cycleQuestion();
-        }
-    })
+                // display message for 1s
+                var timeInterval2 = setInterval(function () {
+                    messageTime--;
+                    if (messageTime === 0) {
+                        message.innerHTML = "";
+                        clearInterval(timeInterval2);
+                        messageTime = 1;
+                    }
+                }, 1000);
+                cycleQuestion();
+            }
+        })
+    }
+    firstClick = true;
 }
 
 // Input Scores and goto high scores page
